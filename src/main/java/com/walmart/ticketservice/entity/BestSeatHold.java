@@ -1,7 +1,6 @@
 package com.walmart.ticketservice.entity;
 
 import lombok.Data;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * BestSeatHold Entity class to store the information of BestSeatsHold.
  * created by Laxmi Kalyan Kistapuram on 12/28/18
  */
-
 @Data
 public class BestSeatHold {
 
@@ -25,11 +23,6 @@ public class BestSeatHold {
     {
         this.holdId = atomicInteger.getAndIncrement();
     }
-
-
-
-
-
 }
 
 

@@ -1,25 +1,30 @@
-package com.walmart.ticketservice.service.impl;
+package com.walmart.ticketservice.service;
 
 import com.walmart.ticketservice.constants.TicketServiceConstants;
 import com.walmart.ticketservice.controller.TicketServiceController;
+import com.walmart.ticketservice.entity.Venue;
 import com.walmart.ticketservice.entity.BestSeatHold;
 import com.walmart.ticketservice.entity.SeatStatus;
 import com.walmart.ticketservice.entity.Seats;
-import com.walmart.ticketservice.entity.Venue;
+import com.walmart.ticketservice.entity.AvailableSeats;
+import com.walmart.ticketservice.exception.ApiException;
+import com.walmart.ticketservice.utils.GsonUtils;
 import com.walmart.ticketservice.utils.LogUtils;
+import com.walmart.ticketservice.entity.ReservedSeats;
+import com.walmart.ticketservice.validator.TicketServiceValidations;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import java.time.Instant;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.Collections;
-
+import java.util.LinkedList;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -46,6 +51,65 @@ public class TicketServiceImpl implements TicketServiceController {
         this.venue.seatsInitailization(TicketServiceConstants.NUM_OF_ROWS,TicketServiceConstants.NUM_OF_COLUMNS);
         this.seatsAvailable = venue.getOccupancy();
         bestSeatHoldMap = new ConcurrentHashMap();
+    }
+
+    @Override
+    public ResponseEntity<AvailableSeats> availableSeatsWithInVenue() {
+        removeExpiredHoldSeats();
+        return new ResponseEntity(new AvailableSeats(seatsAvailable,venue.getOccupancy()), HttpStatus.OK);
+    }
+
+
+    @Override
+    public ResponseEntity<BestSeatHold> findAndHoldBestSeats(int numOfSeats, String customerEmail) {
+        removeExpiredHoldSeats();
+        List<Seats> bestHoldingSeats = findBestSeats(numOfSeats);
+        if(!CollectionUtils.isEmpty(bestHoldingSeats))
+        {
+            seatsStatusUpdate(bestHoldingSeats,SeatStatus.HOLD);
+            this.seatsAvailable -= bestHoldingSeats.size();
+            BestSeatHold bestSeatHold = holdBestSeatToCustomer(bestHoldingSeats,customerEmail);
+            if(Objects.nonNull(bestSeatHold))
+            {
+                bestSeatHoldMap.put(bestSeatHold.getHoldId(),bestSeatHold);
+            }
+            return new ResponseEntity(bestSeatHold,HttpStatus.OK);
+        }
+        return  new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Available Seats at Venue Right Now "+this.seatsAvailable)),HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Override
+    public ResponseEntity<ReservedSeats> reserveSeats(int holdId, String customerEmail) {
+
+        if(Objects.isNull(holdId) || holdId<=0 )
+        {
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Invalid HoldId : "+holdId)),HttpStatus.BAD_REQUEST);
+        }
+        if(!TicketServiceValidations.validateEmail(customerEmail))
+        {
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Invalid Customer Email: "+customerEmail)),HttpStatus.BAD_REQUEST);
+        }
+
+        removeExpiredHoldSeatsWithHoldId(holdId);
+        BestSeatHold bestSeatHold = bestSeatHoldMap.get(holdId);
+
+        if(Objects.isNull(bestSeatHold))
+        {
+            logger.error("HoldId is Invalid or its Expired : {}",holdId);
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"HoldId is Invalid or its lapsed the maxmium hold time: "+holdId)),HttpStatus.BAD_REQUEST);
+        }
+
+        if(!TicketServiceValidations.validateCustomerEmailWithExisting(customerEmail,bestSeatHold.getCustomerEmail()))
+        {
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Customer Email doesn't match up with records please try with a different Email: "+customerEmail)),HttpStatus.BAD_REQUEST);
+        }
+
+        seatsStatusUpdate(bestSeatHold.getSeatsHeld(),SeatStatus.RESERVED);
+        List<Seats> seatsList = bestSeatHold.getSeatsHeld();
+        ReservedSeats reservedSeats = new ReservedSeats(seatsList,holdId, UUID.randomUUID().toString(),customerEmail);
+
+        return new ResponseEntity(reservedSeats,HttpStatus.OK);
     }
 
 
@@ -95,7 +159,6 @@ public class TicketServiceImpl implements TicketServiceController {
      * @param seatsHeld
      * @param seatStatus
      */
-
     private void seatsStatusUpdate(List<Seats> seatsHeld , SeatStatus seatStatus)
     {
         if(!CollectionUtils.isEmpty(seatsHeld))
@@ -113,26 +176,25 @@ public class TicketServiceImpl implements TicketServiceController {
      * @param numOfSeats
      * @return
      */
-
     private List<Seats> findBestSeats(int numOfSeats)
     {
         List<Seats> seatsList = null;
         if(numOfSeats>0)
         {
-
             if(this.seatsAvailable < numOfSeats)
             {
-                System.out.println("Available Seats at Venue Right Now :"+this.seatsAvailable);
-                return Collections.synchronizedList(new LinkedList<Seats>());
-            }
+                logger.info("Available Seats at Venue Right Now ={}", this.seatsAvailable);
+                seatsList = Collections.synchronizedList(new LinkedList<Seats>());
+                return  seatsList;
+                 }
             Seats[][] seats = venue.getSeats();
             seatsList = Collections.synchronizedList(new LinkedList());
             boolean flag = false;
-            for(int i=1; i<venue.getNumOfRows(); i++) {
+            for(int i=0; i<venue.getNumOfRows(); i++) {
                 if (flag) {
                     break;
                 }
-                for (int j = 1; j < venue.getNumOfColumns(); j++) {
+                for (int j = 0; j <venue.getNumOfColumns(); j++) {
                     Seats seat = seats[i][j];
                     if (SeatStatus.AVAILABLE == seat.getSeatStatus()) {
                         seatsList.add(seat);
@@ -149,7 +211,6 @@ public class TicketServiceImpl implements TicketServiceController {
     }
 
 
-
     /**
      * Hold the Best Seats for the Customer and assign the holdId to CustomerEmail
      * @param customerEmail
@@ -157,58 +218,16 @@ public class TicketServiceImpl implements TicketServiceController {
      */
     private BestSeatHold holdBestSeatToCustomer(List<Seats> bestHoldSeats , String customerEmail)
     {
-        if(CollectionUtils.isEmpty(bestHoldSeats))
+        if(!CollectionUtils.isEmpty(bestHoldSeats))
         {
-            return  null;
+            BestSeatHold bestSeatHold = new BestSeatHold();
+            bestSeatHold.setSeatsHeld(bestHoldSeats);
+            bestSeatHold.setTime(Instant.now());
+            bestSeatHold.setCustomerEmail(customerEmail);
+            return  bestSeatHold;
         }
-        BestSeatHold bestSeatHold = new BestSeatHold();
-        bestSeatHold.setSeatsHeld(bestHoldSeats);
-        bestSeatHold.setTime(Instant.now());
-        bestSeatHold.setCustomerEmail(customerEmail);
-        return  bestSeatHold;
-    }
-
-    @Override
-    public int availableSeatsWithInVenue() {
-        removeExpiredHoldSeats();
-        return seatsAvailable;
+       return null;
     }
 
 
-    @Override
-    public BestSeatHold findAndHoldBestSeats(int numOfSeats, String customerEmail) {
-        removeExpiredHoldSeats();
-        List<Seats> bestHoldingSeats = findBestSeats(numOfSeats);
-        seatsStatusUpdate(bestHoldingSeats,SeatStatus.HOLD);
-        this.seatsAvailable -= bestHoldingSeats.size();
-        BestSeatHold bestSeatHold = holdBestSeatToCustomer(bestHoldingSeats,customerEmail);
-        if(Objects.nonNull(bestSeatHold))
-        {
-            bestSeatHoldMap.put(bestSeatHold.getHoldId(),bestSeatHold);
-        }
-        return bestSeatHold;
-    }
-
-
-    @Override
-    public String reserveSeats(int holdId, String customerEmail) {
-        removeExpiredHoldSeatsWithHoldId(holdId);
-        BestSeatHold bestSeatHold = bestSeatHoldMap.get(holdId);
-        if(Objects.isNull(bestSeatHold))
-        {
-            System.out.println("HoldId is Invalid or its Expired");
-            return null;
-        }
-        seatsStatusUpdate(bestSeatHold.getSeatsHeld(),SeatStatus.RESERVED);
-        bestSeatHoldMap.remove(holdId);
-
-        List<Seats> seatsList = bestSeatHold.getSeatsHeld();
-        String seatReserved = null;
-        for(Seats seats :seatsList)
-        {
-            seatReserved = "Row Number:"+seats.getRowNum()+"Column Number:"+seats.getColumnNum();
-
-        }
-        return seatReserved;
-    }
 }
