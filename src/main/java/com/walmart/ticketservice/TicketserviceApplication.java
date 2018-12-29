@@ -1,14 +1,14 @@
 package com.walmart.ticketservice;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan
+/**
+ * Spring Boot Application main class for TicketserviceApplication
+ * created by Laxmi Kalyan Kistapuram on 12/28/18
+ */
+@SpringBootApplication
 public class TicketserviceApplication {
 
     public static void main(String[] args) {

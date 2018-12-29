@@ -1,4 +1,4 @@
-package com.walmart.ticketservice.controller.impl;
+package com.walmart.ticketservice.service.impl;
 
 import com.walmart.ticketservice.constants.TicketServiceConstants;
 import com.walmart.ticketservice.controller.TicketServiceController;
@@ -6,16 +6,28 @@ import com.walmart.ticketservice.entity.BestSeatHold;
 import com.walmart.ticketservice.entity.SeatStatus;
 import com.walmart.ticketservice.entity.Seats;
 import com.walmart.ticketservice.entity.Venue;
+import com.walmart.ticketservice.utils.LogUtils;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
-import java.util.*;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Collections;
+
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Service Class to implement the methods from controller to handle http requests and perform the business logic.
+ * created by Laxmi Kalyan Kistapuram on 12/29/18
+ */
 @Service
-public class TicketServiceControllerImpl implements TicketServiceController {
+public class TicketServiceImpl implements TicketServiceController {
 
     private int seatsAvailable;
 
@@ -24,9 +36,10 @@ public class TicketServiceControllerImpl implements TicketServiceController {
 
     private Map<Integer, BestSeatHold> bestSeatHoldMap;
 
+    private static Logger logger = LogUtils.getLogger(TicketServiceImpl.class.getName());
 
     @Autowired
-      TicketServiceControllerImpl(Venue venue)
+    TicketServiceImpl(Venue venue)
     {
         super();
         this.venue = venue;

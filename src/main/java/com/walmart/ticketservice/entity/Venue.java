@@ -1,10 +1,13 @@
 package com.walmart.ticketservice.entity;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+/**
+ * Venue class to store info about occupancy,rows ,columns
+ * created by Laxmi Kalyan Kistapuram on 12/28/18
+ */
 @Data
 @Component
 public class Venue {
@@ -13,24 +16,6 @@ public class Venue {
     private int numOfColumns;
     private Seats[][] seats;
     private int occupancy;
-
-
-/*public Venue(int numOfRows, int numOfColumns) {
-        super();
-        this.numOfRows = numOfColumns;
-        this.numOfColumns = numOfColumns;
-        this.occupancy = (this.numOfRows * this.numOfColumns);
-        seatsInitailization();
-    }
-
-
-    public void occupanyAndSeatsInitailization(int numOfRows, int numOfColumns)
-    {
-        this.numOfRows = numOfColumns;
-        this.numOfColumns = numOfColumns;
-        this.occupancy = (this.numOfRows * this.numOfColumns);
-        seatsInitailization();
-    }*/
 
 
     public void seatsInitailization(int numOfRows ,int numOfColumns){

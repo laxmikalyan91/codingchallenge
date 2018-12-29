@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ *  TicketServiceController Interface to handle http requests from the client.
+ *  created by Laxmi Kalyan Kistapuram on 12/28/18
+ */
 @RestController
 @RequestMapping("/walmart/ticket-service")
 public interface TicketServiceController {
@@ -39,7 +44,7 @@ public interface TicketServiceController {
      * @return confirmation code for reserved seats
      */
 
-    @GetMapping(value = "/reserveseats")
+    @GetMapping(value = "/reserve-seats")
     public String reserveSeats(@RequestParam("holdId") int holdId,
                                        @RequestParam("customerEmail") String customerEmail);
 

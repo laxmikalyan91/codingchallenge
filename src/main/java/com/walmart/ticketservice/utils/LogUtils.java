@@ -1,0 +1,21 @@
+package com.walmart.ticketservice.utils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * created by Laxmi Kalyan Kistapuram on 12/29/18
+ * LogUtils to perform logging
+ */
+public class LogUtils {
+
+    /**
+     * Getting logger instance by providing classname
+     *
+     * @param className
+     * @return
+     */
+    public static Logger getLogger(String className) {
+        return LoggerFactory.getLogger(className);
+    }
+}
