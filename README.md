@@ -127,7 +127,7 @@ brew install curl
 ```
 ![alt text](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/bestholdseat_curl.png)
 ```
-3) curl -X GET 'http://localhost:8080/walmart/ticket-service/reserve-seats?holdId=10&customerEmail=laxmikalyan@gmail.com'
+3) curl -X GET 'http://localhost:8080/walmart/ticket-service/reserve-seats?holdId=10&customerEmail=laxmikalyan91@gmail.com'
 ```
 ![alt text](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/reseredseats_curl.png)
 
