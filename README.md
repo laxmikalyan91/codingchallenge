@@ -4,9 +4,9 @@ Ticket Service Web application helps to facilitates the discovery, temporary hol
 venue.
 
 * This application is developed based on Springboot, Java 1.8 , Maven ,Gson, commons-validator,lombok,slf4j,Mockito,reflections, Concurrent HashMap(In-Memory).
-* Concurrent HashMap(Thread-Safe)is shared through the entire application to hold the information about the bestholdseats, reverseved seats and number of seats available.
+* Concurrent HashMap(Thread-Safe)is shared through the entire application to hold the information about the bestholdseats, reserved seats and number of seats available.
 * In realtime Scenario Database is used here to store information and acquire locks and maintain data consistency for each request.
-* Because data is stored In-memory taken care of java heap memory Size by passing it through JVM args.
+* Because data is stored In-memory taken care of java heap memory Size by passing it as options to Java Runtime Environment(JRE).
 * This application asynchronously(Parallely) handles http requests for user to access all the 3 Endpoints.
 
 ### Assumptions
