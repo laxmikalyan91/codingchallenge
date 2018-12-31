@@ -27,12 +27,14 @@ venue.
 
 ![alt text](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/availableseats.png)
 
+
 ```
 2) http://localhost:8080/walmart/ticket-service/findandholdbestseats?numOfSeats=3&customerEmail=laxmikalyan91@gmail.com
 ```
 ##### This Service can find and hold best available seats with numOfSeats and customerEmail as request parameters.
 
 ![alt text](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/bestholdseat.png)
+
 
 ```
 3) http://localhost:8080/walmart/ticket-service/reserve-seats?holdId=7&customerEmail=laxmikalyan91@gmail.com
