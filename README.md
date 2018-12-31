@@ -17,7 +17,75 @@ venue.
 4) Maximum BestSeatHold Time for the user is 90 seconds. If the user fail to reserve the seats with in 90 seconds then the hold on the seats is removed. seats are put back in available user has to make another request to hold the seats.
 5) No notification for expiration of bestholdseats.
 
-### Application has 3 GET Endpoints
+
+Building and Running the Walmart Ticket Service Application
+---
+There are two ways you can run this project its from command line or run from an IDE and test through Postman.
+I will guide you both the ways.Please follow the below steps.
+1. Clone the project and change directory to codingchallenge
+```
+git clone https://github.com/laxmikalyan91/codingchallenge.git
+cd codingchallenge
+```
+2. Make sure homebrew is installed first if not please use the below command in the terminal.
+HomeBrew helps in install the stuff we need that apple didn’t provide.
+```
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+3. Make Sure Maven is Installed in your Machine. I am using Mac here. If not installed please use the command below to install
+```
+brew install maven
+```
+4. Build the Project before you run use the below commands to do so.
+* To run the build with tests. 
+* To run the build skipping tests
+```
+mvn clean install
+mvn clean install -DskipTests
+```
+##### If you encounter any build failures for 3rd party maven Dependencies and plugins please follow the below steps explained in detail with commands.
+
+### Download and Install 3rd party maven Dependencies and plugins:
+---
+```
+1)Gson
+```
+* Gson is from google to parse Java Objects to Json and viceversa.
+* source:https://mvnrepository.com/artifact/com.google.code.gson/gson/2.8.5
+* Download and Install the JAR into your local Maven repository as below.
+* mvn install:install-file -Dfile=/Users/laxmikalyan/Downloads/gson-2.8.5.jar -DgroupId= com.google.code.gson\-DartifactId=gson -Dversion=2.8.5 -Dpackaging=jar
+* Note: please change the file path.
+```
+2)Lombok plugin
+```
+* Lombok is used as a replacement of setters,getters,tostring,constructors.
+* No need of writing boilerplate code lombok takes care of it.very efficient and useful makes life easy.
+* source: Intellij IDEA
+ 
+```
+3)commons-validator
+```
+* commons-validator is to validate the Email address.
+* source : https://mvnrepository.com/artifact/commons-validator/commons-validator/1.4.0
+* Download and Install the JAR into your local Maven repository as below.
+* mvn install:install-file -Dfile=/Users/laxmikalyan/Downloads/commons-validator-1.4.0.jar -DgroupId=commons-validator \-DartifactId=commons-validator -Dversion=1.4.0 -Dpackaging=jar
+* Note: please change the file path.
+
+5. Once Build is successful.Change directory to target and use the below command to execute the Jar.
+```
+cd target
+java -Xmx1024m -Xms256m -jar ticketservice-0.0.1-SNAPSHOT.jar
+```
+-Xmx --> Max Heap Size
+-Xms --> Min Heap Size
+
+6. After running the above command wait for Walmart Ticket Service to start you should see the below
+
+![alt text](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/Walmart%20Ticket%20Service%20Application%20Start.png)
+
+7. Now you can test the endpoints either by command prompt using curl or through postman. 
+
+### Test Through Postman
 ---
 
 ```
@@ -43,116 +111,22 @@ venue.
 
 ![alt text](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/ReserveSeats.png)
 
-
-### 3rd party maven Dependencies and plugins:
+### Test through Curl in Terminal
 ---
-```
-1)Gson
-```
-* Gson is from google to parse Java Objects to Json and viceversa.
-* source:https://mvnrepository.com/artifact/com.google.code.gson/gson/2.8.5
-* Downlaod and Install the JAR into your local Maven repository as below.
-* mvn install:install-file -Dfile=/Users/laxmikalyan/Downloads/gson-2.8.5.jar -DgroupId= com.google.code.gson\-DartifactId=gson -Dversion=2.8.5 -Dpackaging=jar
-* Note: please change the file path.
-```
-2)Lombok plugin
-```
-* Lombok is used as a replacement of setters,getters,tostring,constructors.
-* No need of writing boilerplate code lombok takes care of it.very efficient and useful makes life easy.
-* source:Intellij IDEA
- 
-```
-3)commons-validator
-```
-* commons-validator is to validate the Email address.
-* source : https://mvnrepository.com/artifact/commons-validator/commons-validator/1.4.0
-* Downlaod and Install the JAR into your local Maven repository as below.
-* mvn install:install-file -Dfile=/Users/laxmikalyan/Downloads/commons-validator-1.4.0.jar -DgroupId=commons-validator \-DartifactId=commons-validator -Dversion=1.4.0 -Dpackaging=jar
-* Note: please change the file path.
-
-
-Building Project
----
-
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
+If is curl not installed on your machine please follow the below step in terminal to install.
 
 ```
-Give examples
+brew install curl
+```
+```
+1) curl -X GET http://localhost:8080/walmart/ticket-service/availableseats
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
 ```
-Give the example
+2) curl -X GET 'http://localhost:8080/walmart/ticket-service/findandholdbestseats?numOfSeats=4&customerEmail=laxmikalyan91@gmail.com'
+```
+```
+3) curl -X GET 'http://localhost:8080/walmart/ticket-service/reserve-seats?holdId=10&customerEmail=laxmikalyan@gmail.com'
 ```
 
-And repeat
 
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
