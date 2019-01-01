@@ -63,6 +63,17 @@ public class TicketServiceImpl implements TicketServiceController {
     @Override
     public ResponseEntity<BestSeatHold> findAndHoldBestSeats(int numOfSeats, String customerEmail) {
         removeExpiredHoldSeats();
+        if(Objects.isNull(numOfSeats) || numOfSeats<=0 )
+        {
+            logger.error("Number of seats is Invalid {}",numOfSeats);
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Number of Seats should be greater than 0 ")),HttpStatus.BAD_REQUEST);
+        }
+        if(!TicketServiceValidations.validateEmail(customerEmail))
+        {
+            logger.error("customerEmail  is Invalid {}",customerEmail);
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Invalid Customer Email")),HttpStatus.BAD_REQUEST);
+        }
+
         List<Seats> bestHoldingSeats = findBestSeats(numOfSeats);
         if(!CollectionUtils.isEmpty(bestHoldingSeats))
         {
@@ -84,11 +95,13 @@ public class TicketServiceImpl implements TicketServiceController {
 
         if(Objects.isNull(holdId) || holdId<=0 )
         {
-            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Invalid HoldId : "+holdId)),HttpStatus.BAD_REQUEST);
+            logger.error("HoldId is Invalid {}",holdId);
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Invalid HoldId ")),HttpStatus.BAD_REQUEST);
         }
         if(!TicketServiceValidations.validateEmail(customerEmail))
         {
-            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Invalid Customer Email: "+customerEmail)),HttpStatus.BAD_REQUEST);
+            logger.error("customerEmail  is Invalid {}",customerEmail);
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Invalid Customer Email")),HttpStatus.BAD_REQUEST);
         }
 
         removeExpiredHoldSeatsWithHoldId(holdId);
@@ -97,12 +110,13 @@ public class TicketServiceImpl implements TicketServiceController {
         if(Objects.isNull(bestSeatHold))
         {
             logger.error("HoldId is Invalid or its Expired : {}",holdId);
-            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"HoldId is Invalid or its lapsed the maxmium hold time: "+holdId)),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"HoldId is Invalid or its lapsed the maxmium hold time")),HttpStatus.BAD_REQUEST);
         }
 
         if(!TicketServiceValidations.validateCustomerEmailWithExisting(customerEmail,bestSeatHold.getCustomerEmail()))
         {
-            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Customer Email doesn't match up with records please try with a different Email: "+customerEmail)),HttpStatus.BAD_REQUEST);
+            logger.error("customerEmail is Invalid doesn't match up the records {} {}",customerEmail,bestSeatHold.getCustomerEmail());
+            return new ResponseEntity(GsonUtils.convertToJson(new ApiException(HttpStatus.BAD_REQUEST.value(),HttpStatus.BAD_REQUEST,TicketServiceConstants.INVALID_REQUEST,"Customer Email doesn't match up with records please try with a different Email")),HttpStatus.BAD_REQUEST);
         }
 
         seatsStatusUpdate(bestSeatHold.getSeatsHeld(),SeatStatus.RESERVED);
