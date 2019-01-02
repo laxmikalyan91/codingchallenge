@@ -5,14 +5,14 @@ venue.
 
 * This application is developed based on springboot, Java 1.8 , Maven, Gson, commons-validator,lombok,slf4j,Mockito,reflections, Concurrent HashMap(In-Memory).
 * Concurrent HashMap(Thread-Safe)is shared through the entire application to hold the information about the bestholdseats, reserved seats and number of seats available.
-* In realtime Scenario Database is used here to store information, acquire locks(Lock Based Protocol) on database for concurrency control and to preserve and maintain data consistency for each request.
+* In realtime Scenario Database is used here to store information, acquire locks(Lock Based Protocol) on database for concurrency control to preserve and maintain data consistency for each request.
 * Because data is stored In-memory taken care of java heap memory size by passing it as options to Java Runtime Environment(JRE).
-* This application asynchronously(Parallely) handles http requests from user to access all the 3 Endpoints.
+* This application handles asynchronously(Parallel) http requests from user to access all the 3 Endpoints.
 
 ### Assumptions
 ---
-1) Number of Seats in a Row and in a Column is 20
-2) Total Occupancy is Number of Seats in a Row * Number of Seats in a Column = 400
+1) Number of seats in a row and in a column is 20
+2) Total occupancy is number of seats in a row * number of seats in a column = 400
 3) Users are provided seats based on the seats status and number of seats available.
 4) Maximum BestSeatHold Time for the user is 90 seconds. If the user fail to reserve the seats with in 90 seconds then the hold on the seats is removed. seats are put back in available user has to make another request to hold the seats.
 5) No notification for expiration of bestholdseats.
@@ -20,30 +20,28 @@ venue.
 
 Building and Running the Walmart Ticket Service Application
 ---
-There are two ways you can run this project its from command line or run from an IDE and test through Postman.
-I will guide you both the ways.Please follow the below steps.
 1. Clone the project and change directory to codingchallenge
 ```
 git clone https://github.com/laxmikalyan91/codingchallenge.git
 cd codingchallenge
 ```
-2. Make sure homebrew is installed first if not please use the below command in the terminal.
+2. I am using Mac here.Make sure homebrew is installed first if not please use the below command in the terminal.
 HomeBrew helps in install the stuff we need that apple didn’t provide.
 ```
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
-3. Make Sure Maven is Installed in your Machine. I am using Mac here. If not installed please use the command below to install
+3. If Homebrew is already installed ignore step 2.Make Sure Maven is Installed in your Machine.If not installed please use the command below to install
 ```
 brew install maven
 ```
 4. Build the Project before you run use the below commands to do so.
-* To run the build with tests. 
-* To run the build skipping tests
+* To run the build with tests use 1st command
+* To run the build skipping tests use 2nd command.
 ```
 mvn clean install
 mvn clean install -DskipTests
 ```
-##### If you encounter any build failures for 3rd party maven Dependencies and plugins please follow the below steps explained in detail with commands.
+##### If you encounter any build failures for 3rd party maven Dependencies and plugin missing please follow the below steps explained in detail with commands.
 
 ### Download and Install 3rd party maven Dependencies and plugins:
 ---
@@ -71,7 +69,8 @@ mvn clean install -DskipTests
 * mvn install:install-file -Dfile=/Users/laxmikalyan/Downloads/commons-validator-1.4.0.jar -DgroupId=commons-validator \-DartifactId=commons-validator -Dversion=1.4.0 -Dpackaging=jar
 * Note: please change the file path.
 
-5. Once Build is successful.Change directory to target and use the below command to execute the Jar.
+5. Once all tests are passed and build is success.Change directory to target and use the below command to execute the Jar.
+![alt text](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/Build_Success.png)
 ```
 cd target
 java -Xmx1024m -Xms256m -jar ticketservice-0.0.1-SNAPSHOT.jar
@@ -79,11 +78,14 @@ java -Xmx1024m -Xms256m -jar ticketservice-0.0.1-SNAPSHOT.jar
 * -Xmx --> Max Heap Size
 * -Xms --> Min Heap Size
 
-6. After running the above command wait for Walmart Ticket Service to start you should see the below
+6. After running the above command wait for Walmart Ticket Service Application to start on port 8080 you should see the below
 
-![alt text](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/Walmart%20Ticket%20Service%20Application%20Start.png)
+![alttext] (https://github.com/laxmikalyan91/codingchallenge/blob/master/images/Walmart%20Ticket%20Service%20Application%20Start.png)
 
-7. Now you can test the endpoints either by command prompt using curl or through postman. 
+7.There are two ways you can run this project its from command line or from an IDE.
+  I will guide you both the ways.Please follow the below steps.
+   Now you can test the endpoints either by command prompt using curl or through postman. 
+
 
 ### Test Through Postman
 ---
