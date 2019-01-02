@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * GsonBuilder to convert the java Objects to Json
+ * GsonBuilder to convert the java Objects to Json and Viceversa
  * created by Laxmi Kalyan Kistapuram on 12/29/18
  */
 public class GsonUtils {

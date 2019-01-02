@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * This Entity class is to store the information of Reserved Seats and expose to client
+ * This ReservedSeats Entity class is to store the information of Reserved Seats and expose to user
  * created by Laxmi Kalyan Kistapuram on 12/29/18
  */
 @Data

@@ -1,13 +1,13 @@
 # Ticket Service Coding Challenge
 ---
-Ticket Service Web application helps to facilitates the discovery, temporary hold, and final reservation of seats within a high-demand performance
+Ticket Service web application helps to facilitates the discovery, temporary hold, and final reservation of seats within a high-demand performance
 venue.
 
-* This application is developed based on Springboot, Java 1.8 , Maven ,Gson, commons-validator,lombok,slf4j,Mockito,reflections, Concurrent HashMap(In-Memory).
+* This application is developed based on springboot, Java 1.8 , Maven, Gson, commons-validator,lombok,slf4j,Mockito,reflections, Concurrent HashMap(In-Memory).
 * Concurrent HashMap(Thread-Safe)is shared through the entire application to hold the information about the bestholdseats, reserved seats and number of seats available.
-* In realtime Scenario Database is used here to store information and acquire locks and maintain data consistency for each request.
-* Because data is stored In-memory taken care of java heap memory Size by passing it as options to Java Runtime Environment(JRE).
-* This application asynchronously(Parallely) handles http requests for user to access all the 3 Endpoints.
+* In realtime Scenario Database is used here to store information, acquire locks(Lock Based Protocol) on database for concurrency control and to preserve and maintain data consistency for each request.
+* Because data is stored In-memory taken care of java heap memory size by passing it as options to Java Runtime Environment(JRE).
+* This application asynchronously(Parallely) handles http requests from user to access all the 3 Endpoints.
 
 ### Assumptions
 ---
@@ -76,8 +76,8 @@ mvn clean install -DskipTests
 cd target
 java -Xmx1024m -Xms256m -jar ticketservice-0.0.1-SNAPSHOT.jar
 ```
--Xmx --> Max Heap Size
--Xms --> Min Heap Size
+* -Xmx --> Max Heap Size
+* -Xms --> Min Heap Size
 
 6. After running the above command wait for Walmart Ticket Service to start you should see the below
 

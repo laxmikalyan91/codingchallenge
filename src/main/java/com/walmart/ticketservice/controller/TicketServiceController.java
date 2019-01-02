@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *  TicketServiceController Interface to handle http requests from the client.
+ *  TicketServiceController Interface to handle http requests from the user.
  *  created by Laxmi Kalyan Kistapuram on 12/28/18
  */
 @RestController
@@ -33,7 +33,7 @@ public interface TicketServiceController {
      */
     @GetMapping(value = "/findandholdbestseats")
     ResponseEntity<BestSeatHold> findAndHoldBestSeats(@RequestParam("numOfSeats") int numOfSeats,
-                                             @RequestParam("customerEmail") String customerEmail);
+                                                      @RequestParam("customerEmail") String customerEmail);
 
 
     /**

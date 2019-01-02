@@ -4,7 +4,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.util.StringUtils;
 
 /**
- * Validation class for the Service methods.
+ * Validation class for the Service methods to validate request params.
  * created by Laxmi Kalyan Kistapuram on 12/29/18
  */
 public class TicketServiceValidations {
