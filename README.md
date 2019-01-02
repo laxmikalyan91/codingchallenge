@@ -82,10 +82,15 @@ java -Xmx1024m -Xms256m -jar ticketservice-0.0.1-SNAPSHOT.jar
 
 ![alttext] (https://github.com/laxmikalyan91/codingchallenge/blob/master/images/Walmart%20Ticket%20Service%20Application%20Start.png)
 
-7.There are two ways you can run this project its from command line or from an IDE.
-  I will guide you both the ways.Please follow the below steps.
-   Now you can test the endpoints either by command prompt using curl or through postman. 
+7.There are two ways you can run this project 
+* Command line using Curl 
+* Using an IDE. I used Intellij Idea here.
+  
+8.  Now you can test the endpoints.There are two ways you can test this project. 
+* Using postman
+* Command line using Curl
 
+#### I have guided both ways in detail with commands and screenshots attached.please follow the below steps:
 
 ### Test Through Postman
 ---
