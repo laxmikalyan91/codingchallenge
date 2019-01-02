@@ -59,6 +59,13 @@ mvn clean install -DskipTests
 * Lombok is used as a replacement of setters,getters,tostring,constructors.
 * No need of writing boilerplate code lombok takes care of it.very efficient and useful makes life easy.
 * source: Intellij IDEA
+
+#### Please follow below steps to Install
+* Go to File > Settings > Plugins.
+* Click on Browse repositories.
+* Search for Lombok Plugin.
+* Click on Install plugin.
+* Restart IntelliJ IDEA.
  
 ```
 3)commons-validator
