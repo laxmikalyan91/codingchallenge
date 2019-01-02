@@ -79,8 +79,7 @@ java -Xmx1024m -Xms256m -jar ticketservice-0.0.1-SNAPSHOT.jar
 * -Xms --> Min Heap Size
 
 6. After running the above command wait for Walmart Ticket Service Application to start on port 8080 you should see the below
-
-![alttext] (https://github.com/laxmikalyan91/codingchallenge/blob/master/images/Walmart%20Ticket%20Service%20Application%20Start.png)
+![alttext](https://github.com/laxmikalyan91/codingchallenge/blob/master/images/Walmart%20Ticket%20Service%20Application%20Start.png)
 
 7.There are two ways you can run this project 
 * Command line using Curl 
