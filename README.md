@@ -7,7 +7,7 @@ venue.
 * Concurrent HashMap(Thread-Safe)is shared through the entire application to hold the information about the bestholdseats, reserved seats and number of seats available.
 * In realtime Scenario Database is used here to store information, acquire locks(Lock Based Protocol) on database for concurrency control to preserve and maintain data consistency for each request.
 * Because data is stored In-memory taken care of java heap memory size by passing it as options to Java Runtime Environment(JRE).
-* This application handles asynchronously(Parallel) http requests from user to access all the 3 Endpoints.
+* This application handles asynchronous(Parallel) http requests from user to access all the 3 Endpoints.
 
 ### Assumptions
 ---
