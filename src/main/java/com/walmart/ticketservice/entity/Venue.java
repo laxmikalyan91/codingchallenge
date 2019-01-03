@@ -16,8 +16,12 @@ public class Venue {
     private Seats[][] seats;
     private int occupancy;
 
-
-    public void seatsInitailization(int numOfRows ,int numOfColumns){
+    /**
+     *  Seats initialisation and make the status available based on no of rows and no of columns
+     * @param numOfRows
+     * @param numOfColumns
+     */
+    public void seatsInitialisation(int numOfRows ,int numOfColumns){
         this.numOfRows = numOfColumns;
         this.numOfColumns = numOfColumns;
         this.occupancy = (this.numOfRows * this.numOfColumns);

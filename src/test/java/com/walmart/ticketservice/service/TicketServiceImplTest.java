@@ -28,12 +28,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest
 @ContextConfiguration(classes = {TicketserviceApplication.class})
 public class TicketServiceImplTest {
-
-    @Autowired
-    private MockMvc mockMvc;
 
 
     private TicketServiceImpl ticketServiceImpl;
@@ -50,7 +46,7 @@ public class TicketServiceImplTest {
     public void setUp() throws Exception {
 
         venue = new Venue();
-        venue.seatsInitailization(TicketServiceConstants.NUM_OF_ROWS,TicketServiceConstants.NUM_OF_COLUMNS);
+        venue.seatsInitialisation(TicketServiceConstants.NUM_OF_ROWS,TicketServiceConstants.NUM_OF_COLUMNS);
         this.seatsAvailable = venue.getOccupancy();
         bestSeatHoldMap = new ConcurrentHashMap();
         ticketServiceImpl = new TicketServiceImpl(venue);

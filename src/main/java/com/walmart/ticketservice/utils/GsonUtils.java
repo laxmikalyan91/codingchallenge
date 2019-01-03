@@ -11,6 +11,11 @@ public class GsonUtils {
 
     static Gson gson = new GsonBuilder().disableHtmlEscaping().serializeNulls().create();
 
+    /**
+     * Converts the Object to Json String
+     * @param obj
+     * @return Json String for the obj passed
+     */
     public static String convertToJson(Object obj) {
 
         return gson.toJson(obj);

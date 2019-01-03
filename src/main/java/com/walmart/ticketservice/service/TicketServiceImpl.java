@@ -48,7 +48,7 @@ public class TicketServiceImpl implements TicketServiceController {
     {
         super();
         this.venue = venue;
-        this.venue.seatsInitailization(TicketServiceConstants.NUM_OF_ROWS,TicketServiceConstants.NUM_OF_COLUMNS);
+        this.venue.seatsInitialisation(TicketServiceConstants.NUM_OF_ROWS,TicketServiceConstants.NUM_OF_COLUMNS);
         this.seatsAvailable = venue.getOccupancy();
         bestSeatHoldMap = new ConcurrentHashMap();
     }

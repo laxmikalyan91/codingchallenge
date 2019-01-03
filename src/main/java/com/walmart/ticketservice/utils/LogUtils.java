@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 public class LogUtils {
 
     /**
-     * Getting logger instance by providing classname
+     * Getting logger object by providing classname
      * @param className
-     * @return
+     * @return Logger Instance
      */
     public static Logger getLogger(String className) {
         return LoggerFactory.getLogger(className);
